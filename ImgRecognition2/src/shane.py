@@ -10,12 +10,16 @@ from pybrain.tools.xml.networkreader import NetworkReader
 import os
 import matplotlib.pyplot as plt
 import cv2
-
+from resizeimage import resizeimage
 
 # read image with cv2
 def loadImage(path):
     im = cv2.imread(path)
-    return flatten(im)
+    imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+    ret, thresh = cv2.threshold(imgray, 127, 255, 0)
+    resized = cv2.resize(imgray,(8,8))
+    cv2.imwrite('out.png', resized)
+    return flatten(resized)
 
 
 # flatten the image
@@ -30,7 +34,7 @@ def flatten(x):
 
 
 # pass image to store image a store it as t
-t = loadImage('testImage.png')
+t = loadImage('trolltunga.jpg')
 # load the data and store
 digits = load_digits()
 
@@ -96,4 +100,3 @@ print 'Percent Accuracy Test dataset: ', percentError(trainer.testOnClassData(
     , testData['class'])
 
 trainer.train()
-
